@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+app:
+  geo:
+    ip:
+      base-url: ${GEO_BASE_URL}
+      connect-timeout-ms: ${GEO_CONNECT_TIMEOUT_MS:2000}
+      read-timeout-ms: ${GEO_READ_TIMEOUT_MS:2000}

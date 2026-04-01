@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+app:
+  geo:
+    ip:
+      base-url: http://mock
+
+logging:
+  level:
+    root: WARN

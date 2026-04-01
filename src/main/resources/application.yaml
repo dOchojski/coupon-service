@@ -3,9 +3,9 @@ spring:
     name: coupon-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/coupon_db
-    username: coupon_user
-    password: coupon_pass
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/coupon_db}
+    username: ${DB_USERNAME:coupon_user}
+    password: ${DB_PASSWORD:coupon_pass}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -25,8 +25,8 @@ spring:
 
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
       timeout: 2000
 
 server:
@@ -51,7 +51,7 @@ management:
 app:
   geo:
     ip:
-      base-url: https://ipapi.co
+      base-url: ${GEO_BASE_URL:https://ipapi.co}
       connect-timeout-ms: 2000
       read-timeout-ms: 2000
   cache:

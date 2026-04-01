@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coupon_db
+    username: coupon_user
+    password: coupon_pass
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+app:
+  geo:
+    ip:
+      base-url: https://ipapi.co
+      connect-timeout-ms: 2000
+      read-timeout-ms: 2000
