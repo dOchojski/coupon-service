@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: coupon-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coupon_db
+    username: coupon_user
+    password: coupon_pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql: WARN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  geo:
+    ip:
+      base-url: https://ipapi.co

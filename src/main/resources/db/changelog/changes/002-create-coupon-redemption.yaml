@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-coupon-redemption
+      author: dOchojski
+      changes:
+        - createTable:
+            tableName: coupon_redemption
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: coupon_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: VARCHAR(100)
+
+              - column:
+                  name: redeemed_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: ip_address
+                  type: VARCHAR(45)
+
+              - column:
+                  name: country_code
+                  type: VARCHAR(2)
+
+        - addForeignKeyConstraint:
+            baseTableName: coupon_redemption
+            baseColumnNames: coupon_id
+            referencedTableName: coupon
+            referencedColumnNames: id
+            constraintName: fk_redemption_coupon
+
+        - createIndex:
+            tableName: coupon_redemption
+            indexName: idx_redemption_coupon
+            columns:
+              - column:
+                  name: coupon_id
+
+        - addUniqueConstraint:
+            tableName: coupon_redemption
+            columnNames: coupon_id, user_id
+            constraintName: uq_coupon_user

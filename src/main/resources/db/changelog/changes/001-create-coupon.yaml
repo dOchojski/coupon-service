@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-coupon
+      author: dOchojski
+      changes:
+        - createTable:
+            tableName: coupon
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: code_original
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: code_normalized
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: max_usages
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: current_usages
+                  type: INT
+                  defaultValueNumeric: "0"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: country_code
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: coupon
+            columnNames: code_normalized
+            constraintName: uq_coupon_code_normalized

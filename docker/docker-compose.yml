@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: coupon-postgres
+    environment:
+      POSTGRES_DB: coupon_db
+      POSTGRES_USER: coupon_user
+      POSTGRES_PASSWORD: coupon_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  redis:
+    image: redis:7
+    container_name: coupon-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
