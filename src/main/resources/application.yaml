@@ -52,3 +52,7 @@ app:
   geo:
     ip:
       base-url: https://ipapi.co
+      connect-timeout-ms: 2000
+      read-timeout-ms: 2000
+  cache:
+    ip-country-ttl-seconds: 3600
