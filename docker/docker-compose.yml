@@ -7,7 +7,6 @@ services:
     container_name: coupon-postgres
     restart: always
     environment:
-      SPRING_PROFILES_ACTIVE: local
       POSTGRES_DB: coupon_db
       POSTGRES_USER: coupon_user
       POSTGRES_PASSWORD: coupon_pass

@@ -43,3 +43,4 @@ Project is split into clear layers:
 
 ```bash
 docker compose up -d
+./gradlew bootRun --args='--spring.profiles.active=local'
