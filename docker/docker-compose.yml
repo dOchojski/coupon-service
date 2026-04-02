@@ -1,6 +1,26 @@
-version: '3.9'
-
 services:
+
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: coupon-app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://postgres:5432/coupon_db
+      DB_USERNAME: coupon_user
+      DB_PASSWORD: coupon_pass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      GEO_BASE_URL: https://ipapi.co
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   postgres:
     image: postgres:15

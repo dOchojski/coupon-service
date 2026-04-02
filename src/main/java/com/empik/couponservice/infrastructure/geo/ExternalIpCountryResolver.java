@@ -2,11 +2,13 @@ package com.empik.couponservice.infrastructure.geo;
 
 import com.empik.couponservice.application.exception.GeoServiceUnavailableException;
 import com.empik.couponservice.domain.CountryCodeNormalizer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
+@Slf4j
 @Component
 public class ExternalIpCountryResolver implements IpCountryResolver {
 
@@ -38,6 +40,7 @@ public class ExternalIpCountryResolver implements IpCountryResolver {
 
             return countryCodeNormalizer.normalize(response);
         } catch (RestClientException ex) {
+            log.error("Geo service call failed for ip={}: {}", ipAddress, ex.getMessage());
             throw new GeoServiceUnavailableException("Geo service unavailable", ex);
         }
     }

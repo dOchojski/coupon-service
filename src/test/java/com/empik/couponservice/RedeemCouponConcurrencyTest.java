@@ -20,6 +20,7 @@ import java.util.concurrent.*;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -56,25 +57,27 @@ class RedeemCouponConcurrencyTest {
         couponRepository.save(coupon);
 
         int threads = 50;
-        ExecutorService executor = Executors.newFixedThreadPool(threads);
-        List<Callable<RedeemCouponResult>> tasks = new ArrayList<>();
+        List<Future<RedeemCouponResult>> futures;
+        try (ExecutorService executor = Executors.newFixedThreadPool(threads)) {
+            List<Callable<RedeemCouponResult>> tasks = new ArrayList<>();
 
-        for (int i = 0; i < threads; i++) {
-            int userIndex = i;
+            for (int i = 0; i < threads; i++) {
+                int userIndex = i;
 
-            tasks.add(() -> redeemCouponService.redeem(
-                new RedeemCouponCommand(
-                    code,
-                    "user-" + userIndex,
-                    "127.0.0.1"
-                )
-            ));
+                tasks.add(() -> redeemCouponService.redeem(
+                        new RedeemCouponCommand(
+                                code,
+                                "user-" + userIndex,
+                                "127.0.0.1"
+                        )
+                ));
+            }
+
+            futures = executor.invokeAll(tasks);
+
+            executor.shutdown();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
         }
-
-        List<Future<RedeemCouponResult>> futures = executor.invokeAll(tasks);
-
-        executor.shutdown();
-        executor.awaitTermination(10, TimeUnit.SECONDS);
 
         List<RedeemCouponStatus> statuses = new ArrayList<>();
         for (Future<RedeemCouponResult> future : futures) {

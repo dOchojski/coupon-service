@@ -10,9 +10,11 @@ import com.empik.couponservice.persistence.entity.CouponRedemptionEntity;
 import com.empik.couponservice.persistence.repository.CouponRedemptionRepository;
 import com.empik.couponservice.persistence.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RedeemCouponTransactionalService {
@@ -31,11 +33,13 @@ public class RedeemCouponTransactionalService {
             .orElse(null);
 
         if (coupon == null) {
+            log.warn("Redeem attempt for non-existent coupon code={}", normalizedCode);
             return RedeemCouponResult.couponNotFound();
         }
 
         var validationResult = redeemCouponValidator.validate(coupon, command, resolvedCountry);
         if (validationResult.isPresent()) {
+            log.info("Redeem rejected for coupon={} reason={} userId={}", normalizedCode, validationResult.get().status(), command.userId());
             return validationResult.get();
         }
 
@@ -48,6 +52,8 @@ public class RedeemCouponTransactionalService {
 
         couponRedemptionRepository.save(redemption);
         coupon.incrementUsage();
+
+        log.info("Coupon redeemed code={} userId={} usage={}/{}", normalizedCode, command.userId(), coupon.getCurrentUsages(), coupon.getMaxUsages());
 
         return RedeemCouponResult.redeemed();
     }

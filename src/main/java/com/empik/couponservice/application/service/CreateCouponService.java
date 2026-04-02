@@ -9,9 +9,11 @@ import com.empik.couponservice.domain.CountryCodeNormalizer;
 import com.empik.couponservice.persistence.entity.CouponEntity;
 import com.empik.couponservice.persistence.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateCouponService {
@@ -35,8 +37,11 @@ public class CreateCouponService {
         try {
             couponRepository.save(entity);
         } catch (DataIntegrityViolationException e) {
+            log.warn("Attempt to create coupon with duplicate code: {}", normalizedCode);
             throw new CouponAlreadyExistsException("Coupon with this code already exists");
         }
+
+        log.info("Created coupon id={} code={} maxUsages={} country={}", entity.getId(), normalizedCode, command.maxUsages(), normalizedCountryCode);
 
         return new CreateCouponResult(
             entity.getId(),
